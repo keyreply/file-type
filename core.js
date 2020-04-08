@@ -898,32 +898,32 @@ async function _fromTokenizer(tokenizer) {
 		// - 8 bytes: PNG signature
 		// - 4 (length) + 4 (chunk type) + 13 (chunk data) + 4 (CRC): IHDR chunk
 
-		await tokenizer.ignore(8); // ignore PNG signature
+		// await tokenizer.ignore(8); // ignore PNG signature
 
-		async function readChunkHeader() {
-			return {
-				length: await tokenizer.readToken(Token.INT32_BE),
-				type: await tokenizer.readToken(new Token.StringType(4, 'binary'))
-			};
-		}
+		// async function readChunkHeader() {
+		// 	return {
+		// 		length: await tokenizer.readToken(Token.INT32_BE),
+		// 		type: await tokenizer.readToken(new Token.StringType(4, 'binary'))
+		// 	};
+		// }
 
-		do {
-			const chunk = await readChunkHeader();
-			switch (chunk.type) {
-				case 'IDAT':
-					return {
-						ext: 'png',
-						mime: 'image/png'
-					};
-				case 'acTL':
-					return {
-						ext: 'apng',
-						mime: 'image/apng'
-					};
-				default:
-					await tokenizer.ignore(chunk.length + 4); // Ignore chunk-data + CRC
-			}
-		} while (tokenizer.position < tokenizer.fileInfo.size);
+		// do {
+		// 	const chunk = await readChunkHeader();
+		// 	switch (chunk.type) {
+		// 		case 'IDAT':
+		// 			return {
+		// 				ext: 'png',
+		// 				mime: 'image/png'
+		// 			};
+		// 		case 'acTL':
+		// 			return {
+		// 				ext: 'apng',
+		// 				mime: 'image/apng'
+		// 			};
+		// 		default:
+		// 			await tokenizer.ignore(chunk.length + 4); // Ignore chunk-data + CRC
+		// 	}
+		// } while (tokenizer.position < tokenizer.fileInfo.size);
 
 		return {
 			ext: 'png',
